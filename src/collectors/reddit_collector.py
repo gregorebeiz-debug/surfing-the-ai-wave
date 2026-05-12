@@ -16,16 +16,26 @@ class RedditCollector(BaseCollector):
         super().__init__(state)
         self.reddit = None
 
-    def _init_reddit(self):
-        if self.reddit is None:
-            self.reddit = praw.Reddit(
-                client_id=os.getenv("REDDIT_CLIENT_ID", ""),
-                client_secret=os.getenv("REDDIT_CLIENT_SECRET", ""),
-                user_agent="SurfingTheAIWave/1.0",
-            )
+    def _init_reddit(self) -> bool:
+        if self.reddit is not None:
+            return True
+        client_id = os.getenv("REDDIT_CLIENT_ID", "")
+        client_secret = os.getenv("REDDIT_CLIENT_SECRET", "")
+        if not client_id or not client_secret:
+            print("[reddit] SKIPPED — REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET not set")
+            print("[reddit] Create a Reddit app at https://reddit.com/prefs/apps (free)")
+            return False
+        self.reddit = praw.Reddit(
+            client_id=client_id,
+            client_secret=client_secret,
+            user_agent="SurfingTheAIWave/1.0",
+        )
+        return True
 
     def collect(self, sources: list[dict], tier: str = "tier1") -> list[dict]:
-        self._init_reddit()
+        if not self._init_reddit():
+            self.collected = []
+            return []
         results = []
 
         for source in sources:

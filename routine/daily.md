@@ -90,7 +90,9 @@ Write in **Spanish**, keep technical terms in English. Be critical and analytica
 #### 2. "Deep Dives" — Content worth exploring directly
 - Only for items with action_type "deep_dive"
 - Live demos, practical tutorials, unique deep analysis
-- Each item SEPARATE by creator: creator name, video title, what it covers (3-5 lines), "Why watch" (1 line), direct link, duration
+- Each item SEPARATE by creator: creator name, video title, what it covers (3-5 lines), "Por qué ver" (1 line with specific value)
+- **MUST include:** The direct video URL from the `original_url` field (e.g., `https://www.youtube.com/watch?v=VIDEO_ID`) — NOT the channel URL
+- Format links as clickable markdown: `[Ver video](https://www.youtube.com/watch?v=VIDEO_ID)`
 - **MERGE RULE:** Same topic different approach → both shown. Same approach → only the best
 
 #### 3. "Tool & Repo Watch" — New tools and repos
@@ -126,7 +128,10 @@ Write in **Spanish**, keep technical terms in English. Be critical and analytica
 
 ### Formatting
 - Markdown headers, bullet points, bold for emphasis
-- Include direct links where available
+- **ALL links must be clickable markdown format:** `[text](URL)` — never raw URLs as plain text
+- For YouTube videos: `[Ver video](https://www.youtube.com/watch?v=ID)`
+- For repos: `[GitHub](https://github.com/owner/repo)`
+- For blogs: `[Leer artículo](URL)`
 - Start with a brief 1-2 line editorial note setting the tone
 
 ## STEP 5: Generate PDF
@@ -141,11 +146,20 @@ This converts the markdown to a styled PDF.
 
 ## STEP 6: Send Email
 
-Use the Gmail MCP connector to send the newsletter:
-- **To:** Gregorio's email (configured in environment)
-- **Subject:** `🏄 Surfing the AI Wave — Daily Brief (YYYY-MM-DD)` (or "Weekly Brief" on Sundays)
-- **Body:** First 5 non-header lines from the newsletter as preview, plus "Full briefing attached as PDF"
-- **Attachment:** The generated PDF
+Use the Gmail MCP connector (`mcp__Gmail__create_draft` or send tools) to email the newsletter:
+
+1. **Create email draft** with the Gmail MCP tool:
+   - **To:** Gregorio's email (from `NEWSLETTER_RECIPIENT` env var)
+   - **Subject:** `🏄 Surfing the AI Wave — Daily Brief (YYYY-MM-DD)` (or "Weekly Brief" on Sundays)
+   - **Body:** The full newsletter content in HTML format (convert the markdown to HTML inline)
+   - Include a note at the top: "PDF adjunto con el briefing completo"
+
+2. **If Gmail MCP is not available**, fall back to:
+   ```bash
+   python -c "from src.delivery.email_sender import send_newsletter_email; send_newsletter_email(open('data/output/YYYY-MM-DD/newsletter.md').read(), 'data/output/YYYY-MM-DD/newsletter.pdf', date_str='YYYY-MM-DD')"
+   ```
+
+Note: PDF attachment via MCP may not be supported. In that case, send the newsletter as HTML email body (the content is the same, just rendered in the email client instead of a PDF).
 
 ## STEP 7: Archive
 

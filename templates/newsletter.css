@@ -1,115 +1,207 @@
-/* Surfing the AI Wave — Newsletter PDF Stylesheet (Phase 1: Functional) */
-/* Full design with wave motifs, Claude-inspired aesthetic coming in Phase 2 */
+/* Surfing the AI Wave — Newsletter PDF Stylesheet (Phase 2) */
+/* Claude-inspired aesthetic, wave motifs, WeasyPrint-compatible */
 
 @page {
     size: A4;
-    margin: 2cm 2.5cm;
+    margin: 2cm 2.2cm 2.5cm 2.2cm;
+    background: white;
+
     @bottom-center {
-        content: "Surfing the AI Wave — " counter(page);
-        font-size: 9pt;
-        color: #6b7280;
+        content: "Surfing the AI Wave  ·  p. " counter(page);
+        font-size: 8pt;
+        color: #94a3b8;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @top-left {
+        content: "";
+        border-bottom: 3px solid #2563eb;
+        width: 30%;
+    }
+
+    @top-right {
+        content: "";
+        border-bottom: 3px solid #d4956a;
+        width: 30%;
     }
 }
 
+/* ─── Base ──────────────────────────────────────── */
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: 11pt;
-    line-height: 1.6;
-    color: #1f2937;
-    max-width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.65;
+    color: #1e293b;
 }
 
+/* ─── Title ─────────────────────────────────────── */
+
 h1 {
-    font-size: 22pt;
-    color: #1e40af;
-    border-bottom: 3px solid #3b82f6;
-    padding-bottom: 8pt;
-    margin-bottom: 16pt;
+    font-size: 28pt;
+    font-weight: 800;
+    color: #1e3a5f;
+    letter-spacing: -0.5pt;
+    margin-bottom: 2pt;
+    padding-bottom: 10pt;
+    border-bottom: 4px solid #2563eb;
 }
+
+/* Date subtitle */
+h1 + p {
+    font-size: 10pt;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 4pt;
+}
+
+/* Editorial intro */
+h1 + p + p {
+    font-style: italic;
+    color: #475569;
+    font-size: 10.5pt;
+    line-height: 1.6;
+    border-left: 3px solid #d4956a;
+    padding: 8pt 14pt;
+    margin-bottom: 20pt;
+    background-color: #fdf8f4;
+}
+
+/* ─── Section Headers (h2) ──────────────────────── */
 
 h2 {
     font-size: 16pt;
-    color: #1e3a5f;
-    margin-top: 24pt;
-    margin-bottom: 8pt;
-    padding-bottom: 4pt;
-    border-bottom: 1px solid #dbeafe;
+    font-weight: 700;
+    color: #ffffff;
+    margin-top: 28pt;
+    margin-bottom: 12pt;
+    padding: 10pt 16pt;
+    border-radius: 4pt;
+    background-color: #1e3a5f;
 }
 
+/* ─── Item Headers (h3) ─────────────────────────── */
+
 h3 {
-    font-size: 13pt;
-    color: #374151;
-    margin-top: 16pt;
+    font-size: 12pt;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin-top: 18pt;
     margin-bottom: 6pt;
+    padding: 8pt 12pt;
+    background-color: #f0f7ff;
+    border-left: 4px solid #2563eb;
 }
+
+/* ─── Links ─────────────────────────────────────── */
 
 a {
     color: #2563eb;
     text-decoration: none;
 }
 
-a:hover {
-    text-decoration: underline;
-}
+/* ─── Lists ─────────────────────────────────────── */
 
 ul, ol {
     margin-left: 0;
-    padding-left: 18pt;
+    padding-left: 16pt;
 }
 
 li {
-    margin-bottom: 4pt;
+    margin-bottom: 6pt;
+    line-height: 1.55;
 }
+
+/* ─── Emphasis ──────────────────────────────────── */
 
 strong {
-    color: #111827;
+    color: #0f172a;
+    font-weight: 700;
 }
+
+em {
+    color: #475569;
+}
+
+/* ─── Code ──────────────────────────────────────── */
 
 code {
-    background-color: #f3f4f6;
-    padding: 2pt 4pt;
+    background-color: #f1f5f9;
+    padding: 1.5pt 5pt;
     border-radius: 3pt;
-    font-size: 10pt;
+    font-size: 9.5pt;
+    color: #334155;
+    border: 0.5pt solid #e2e8f0;
 }
 
+/* ─── Blockquotes ───────────────────────────────── */
+
 blockquote {
-    border-left: 3px solid #3b82f6;
+    border-left: 3px solid #d4956a;
     margin-left: 0;
-    padding-left: 12pt;
-    color: #4b5563;
+    padding: 8pt 14pt;
+    color: #475569;
     font-style: italic;
+    background-color: #fdf8f4;
 }
+
+/* ─── Horizontal Rules (wave-inspired separator) ── */
 
 hr {
     border: none;
-    border-top: 1px solid #e5e7eb;
-    margin: 16pt 0;
+    height: 3pt;
+    margin: 22pt 0;
+    background-color: #dbeafe;
+    border-top: 1pt solid #93c5fd;
+    border-bottom: 1pt solid #bfdbfe;
 }
+
+/* ─── Tables ────────────────────────────────────── */
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin: 12pt 0;
-    font-size: 10pt;
+    font-size: 9.5pt;
 }
 
 th {
-    background-color: #eff6ff;
-    color: #1e3a5f;
-    padding: 8pt;
+    background-color: #1e3a5f;
+    color: #ffffff;
+    padding: 8pt 10pt;
     text-align: left;
-    border-bottom: 2px solid #3b82f6;
+    font-weight: 600;
+    font-size: 9pt;
+    letter-spacing: 0.5pt;
 }
 
 td {
-    padding: 6pt 8pt;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 7pt 10pt;
+    border-bottom: 1pt solid #e2e8f0;
 }
 
-/* Section-specific styling */
-.wave-today { border-left: 4px solid #2563eb; padding-left: 12pt; }
-.deep-dives { border-left: 4px solid #7c3aed; padding-left: 12pt; }
-.tool-watch { border-left: 4px solid #059669; padding-left: 12pt; }
-.community-pulse { border-left: 4px solid #d97706; padding-left: 12pt; }
-.signal-board { border-left: 4px solid #6b7280; padding-left: 12pt; }
-.buyer-beware { border-left: 4px solid #dc2626; padding-left: 12pt; background-color: #fef2f2; }
+/* ─── Footer Stats ──────────────────────────────── */
+
+body > p:last-child,
+p:last-child em:only-child {
+    font-size: 8.5pt;
+    color: #94a3b8;
+    text-align: center;
+    font-style: italic;
+    margin-top: 24pt;
+    padding-top: 12pt;
+    border-top: 2pt solid #e2e8f0;
+}
+
+/* ─── Print Optimizations ───────────────────────── */
+
+h2, h3 {
+    page-break-after: avoid;
+}
+
+li {
+    page-break-inside: avoid;
+}
