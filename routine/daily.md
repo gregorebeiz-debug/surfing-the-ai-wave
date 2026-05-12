@@ -146,20 +146,19 @@ This converts the markdown to a styled PDF.
 
 ## STEP 6: Send Email
 
-Use the Gmail MCP connector (`mcp__Gmail__create_draft` or send tools) to email the newsletter:
+Send the newsletter via SMTP using the App Password from your instructions context. Run this shell command, substituting the actual GMAIL_APP_PASSWORD value from your instructions:
 
-1. **Create email draft** with the Gmail MCP tool:
-   - **To:** Gregorio's email (from `NEWSLETTER_RECIPIENT` env var)
-   - **Subject:** `🏄 Surfing the AI Wave — Daily Brief (YYYY-MM-DD)` (or "Weekly Brief" on Sundays)
-   - **Body:** The full newsletter content in HTML format (convert the markdown to HTML inline)
-   - Include a note at the top: "PDF adjunto con el briefing completo"
+```bash
+GMAIL_ADDRESS="gregorebeiz@gmail.com" GMAIL_APP_PASSWORD="PASTE_APP_PASSWORD_HERE" NEWSLETTER_RECIPIENT="gregorebeiz@gmail.com" python -c "from src.delivery.email_sender import send_newsletter_email; send_newsletter_email(open('data/output/YYYY-MM-DD/newsletter.md').read(), 'data/output/YYYY-MM-DD/newsletter.pdf', date_str='YYYY-MM-DD')"
+```
 
-2. **If Gmail MCP is not available**, fall back to:
-   ```bash
-   python -c "from src.delivery.email_sender import send_newsletter_email; send_newsletter_email(open('data/output/YYYY-MM-DD/newsletter.md').read(), 'data/output/YYYY-MM-DD/newsletter.pdf', date_str='YYYY-MM-DD')"
-   ```
+**Important:** Replace `PASTE_APP_PASSWORD_HERE` with the value of `GMAIL_APP_PASSWORD` from your instructions. Replace `YYYY-MM-DD` with today's date in both file paths.
 
-Note: PDF attachment via MCP may not be supported. In that case, send the newsletter as HTML email body (the content is the same, just rendered in the email client instead of a PDF).
+If SMTP fails, fall back to Gmail MCP to create a draft:
+- Use `mcp__Gmail__create_draft`
+- **To:** gregorebeiz@gmail.com
+- **Subject:** `Surfing the AI Wave — Daily Brief (YYYY-MM-DD)`
+- **Body:** Full newsletter content converted to HTML
 
 ## STEP 7: Archive
 
@@ -172,6 +171,6 @@ Save the newsletter markdown to `newsletters/YYYY/MM/YYYY-MM-DD.md` for archival
 - **Sunday:** Weekly edition (tier1 + tier2 sources, expanded sections)
 
 ## Environment Variables Needed
-- `GITHUB_TOKEN` — For GitHub collector
-- `REDDIT_CLIENT_ID` + `REDDIT_CLIENT_SECRET` — For Reddit collector
-- `NEWSLETTER_RECIPIENT` — Gregorio's email address
+- `GITHUB_TOKEN` — For GitHub collector (optional but recommended)
+- `GMAIL_APP_PASSWORD` — Add this to the Routine Instructions field (not here)
+- Note: Reddit now uses public RSS feeds — no credentials needed
