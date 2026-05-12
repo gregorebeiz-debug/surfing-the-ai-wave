@@ -1,0 +1,50 @@
+user:
+  name: Gregor
+  background: "Business administrator, self-taught AI practitioner"
+  experience_level: "Intermediate-advanced (uses Claude Code, builds agents, understands LLMs)"
+  language: "Spanish (Colombian), technical terms in English"
+  analysis_style: "Critical, analytical, professional — never complacent"
+  content_preference: "Depth without excess, lean without losing substance, signal over noise"
+
+interests_ranked:
+  - name: "Claude Code & Claude Ecosystem"
+    keywords: ["claude code", "claude", "anthropic", "mcp", "skills", "claude cowork", "subagents", "claude memory"]
+    priority: 1
+  - name: "AI Agents"
+    keywords: ["ai agents", "crewai", "langgraph", "autogen", "autonomous agents", "openclaw", "hermes", "agentic"]
+    priority: 2
+  - name: "AI Automation Workflows"
+    keywords: ["n8n", "make.com", "automation", "workflow", "zapier", "ai automation"]
+    priority: 3
+  - name: "LLMs"
+    keywords: ["gpt", "gemini", "kimi", "llama", "mistral", "open source models", "fine-tuning", "ollama"]
+    priority: 4
+  - name: "Web Design & Development with AI"
+    keywords: ["vercel", "next.js", "web design", "ai website", "v0", "cursor", "bolt"]
+    priority: 5
+  - name: "AI for Business"
+    keywords: ["ecommerce", "shopify", "marketing", "brand", "ai business", "saas"]
+    priority: 6
+  - name: "AI Media Generation"
+    keywords: ["video generation", "image generation", "voice", "elevenlabs", "higgsfield", "seadance", "comfyui", "midjourney"]
+    priority: 7
+  - name: "Investment & Wealth Management with AI"
+    keywords: ["investment", "wealth", "portfolio", "trading", "finance ai"]
+    priority: 8
+  - name: "Agentic OS & Infrastructure"
+    keywords: ["agentic os", "memory", "rag", "vector database", "embeddings", "pinecone"]
+    priority: 9
+
+scoring_rules:
+  base_scores:
+    demo_or_tutorial: 3
+    new_tool_functional: 2
+    core_interest_match: 2
+    new_repo_100_stars_48h: 1
+    tier1_creator: 1
+    opinion_only_no_original: -2
+    duplicate_of_another: -3
+  thresholds:
+    include_in_newsletter: 5
+    deep_dive_section: 7
+    must_see: 9

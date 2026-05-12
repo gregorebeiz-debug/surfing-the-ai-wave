@@ -1,0 +1,191 @@
+youtube:
+  tier1:
+    - name: "Andrej Karpathy"
+      handle: "@AndrejKarpathy"
+      specialty: "AI research, education, original thought"
+      dedup_group: null
+    - name: "Nick Saraev"
+      handle: "@nicksaraev"
+      specialty: "AI automation, agencies, tools"
+      dedup_group: "automation_cluster"
+    - name: "Nate Herk"
+      handle: "@nateherk"
+      specialty: "n8n, automation, AI business"
+      dedup_group: "automation_cluster"
+    - name: "Jack Roberts"
+      handle: "@jackroberts"
+      specialty: "AI automation, agencies"
+      dedup_group: "automation_cluster"
+    - name: "Chase AI"
+      handle: "@chaseai"
+      specialty: "AI tools, automation"
+      dedup_group: "automation_cluster"
+    - name: "AI Foundations"
+      handle: "@aifoundations"
+      specialty: "AI agents, automation"
+      dedup_group: "automation_cluster"
+    - name: "Greg Isenberg"
+      handle: "@gregisenberg"
+      specialty: "AI + business building"
+      dedup_group: null
+    - name: "Jeff Su"
+      handle: "@JeffSu"
+      specialty: "AI productivity, office workflows"
+      dedup_group: null
+    - name: "Sabrina Ramonov"
+      handle: "@sabrina_ramonov"
+      specialty: "SaaS building with AI"
+      dedup_group: null
+    - name: "Alex Finn"
+      handle: "@AlexFinnOfficial"
+      specialty: "Live builds, AI products"
+      dedup_group: null
+    - name: "Brad | AI & Automation"
+      handle: "@bradbonanno"
+      specialty: "Claude Code, MCP, open source"
+      dedup_group: null
+    - name: "Jay E | RoboNuggets"
+      handle: "@RoboNuggets"
+      specialty: "AI content creation"
+      dedup_group: null
+    - name: "UI Collective"
+      handle: "@UICollective"
+      specialty: "Design systems + AI"
+      dedup_group: null
+    - name: "Adrian Saenz"
+      handle: "@AdrianSaenz"
+      specialty: "Finance + AI"
+      dedup_group: null
+    - name: "Alejavi Rivera"
+      handle: "@AlejaviRivera"
+      specialty: "AI tutorials (Spanish)"
+      dedup_group: null
+
+  tier2:
+    - name: "Brock Mesarich"
+      handle: "@BrockMesarich"
+    - name: "Benjamin Cordero"
+      handle: "@bencord"
+    - name: "Migue Baena IA"
+      handle: "@MigueBaenaIA"
+    - name: "Lewis Jackson"
+      handle: "@lewisjackson"
+    - name: "Davie Fogarty"
+      handle: "@DavieFogarty"
+    - name: "THE ECOM KING"
+      handle: "@TheEcomKing"
+    - name: "Futurepedia"
+      handle: "@Futurepedia"
+    - name: "Aprendizaje Supervisado"
+      handle: "@AprendizajeSupervisado"
+    - name: "Grow with Alex"
+      handle: "@GrowWithAlex"
+    - name: "Miles Deutscher"
+      handle: "@MilesDeutscher"
+    - name: "Brendan Gillen"
+      handle: "@BrendanGillen"
+    - name: "Alex Robinson"
+      handle: "@AlexRobinson"
+    - name: "Alek"
+      handle: "@Alek"
+    - name: "AI Pathways"
+      handle: "@AIPathways"
+    - name: "AI Master"
+      handle: "@AIMaster"
+    - name: "WealthManagement Informa"
+      handle: "@WealthManagement"
+    - name: "Simon Scrapes"
+      handle: "@SimonScrapes"
+
+official_sources:
+  tier1:
+    - name: "OpenAI"
+      blog_url: "https://openai.com/blog"
+      rss_url: "https://openai.com/blog/rss.xml"
+    - name: "Anthropic"
+      blog_url: "https://www.anthropic.com/news"
+      rss_url: null
+    - name: "Google DeepMind"
+      blog_url: "https://deepmind.google/discover/blog/"
+      rss_url: null
+    - name: "Y Combinator"
+      blog_url: "https://www.ycombinator.com/blog"
+      youtube_handle: "@ycombinator"
+
+technical_voices:
+  tier1:
+    - name: "Simon Willison"
+      blog_url: "https://simonwillison.net/"
+      rss_url: "https://simonwillison.net/atom/everything/"
+    - name: "Swyx / Latent Space"
+      rss_url: "https://www.latent.space/feed"
+    - name: "Andrew Ng - The Batch"
+      url: "https://www.deeplearning.ai/the-batch/"
+    - name: "Jim Fan"
+      platform: "x_twitter"
+      handle: "@DrJimFan"
+  tier2:
+    - name: "Yann LeCun"
+      platform: "x_twitter"
+      handle: "@ylecun"
+    - name: "Jeremy Howard / Answer.AI"
+      blog_url: "https://www.answer.ai/posts"
+    - name: "Nathan Lambert (Interconnects)"
+      rss_url: "https://www.interconnects.ai/feed"
+    - name: "Sebastian Raschka (Ahead of AI)"
+      rss_url: "https://magazine.sebastianraschka.com/feed"
+    - name: "Gary Marcus"
+      rss_url: "https://garymarcus.substack.com/feed"
+
+newsletters:
+  tier1:
+    - name: "The Rundown AI"
+      rss_url: "https://www.therundown.ai/feed"
+    - name: "TLDR AI"
+      url: "https://tldr.tech/ai"
+  tier2:
+    - name: "Ben's Bites"
+      rss_url: "https://bensbites.beehiiv.com/feed"
+    - name: "Import AI"
+      rss_url: "https://importai.substack.com/feed"
+
+reddit:
+  tier1:
+    - subreddit: "LocalLLaMA"
+      focus: "Open-source AI, model evaluations, practical tips"
+    - subreddit: "ClaudeAI"
+      focus: "Claude-specific tips, problems, workflows"
+  tier2:
+    - subreddit: "MachineLearning"
+      focus: "Research papers, academic discussions"
+    - subreddit: "artificial"
+      focus: "General AI news"
+
+github:
+  tier1:
+    trending_topics: ["artificial-intelligence", "machine-learning", "llm", "ai-agents"]
+    monitored_repos:
+      - "ollama/ollama"
+      - "open-webui/open-webui"
+      - "n8n-io/n8n"
+      - "langgenius/dify"
+      - "langchain-ai/langchain"
+      - "comfyanonymous/ComfyUI"
+      - "vllm-project/vllm"
+      - "e2b-dev/awesome-ai-agents"
+    awesome_lists:
+      - "e2b-dev/awesome-ai-agents"
+  tier2:
+    - name: "Hugging Face Trending"
+      url: "https://huggingface.co/models?sort=trending"
+    - name: "MCP Ecosystem"
+      url: "https://github.com/topics/mcp-server"
+
+podcasts:
+  tier2:
+    - name: "Dwarkesh Podcast"
+      rss_url: "https://api.substack.com/feed/podcast/971730.rss"
+    - name: "TWIML AI"
+      rss_url: "https://feeds.megaphone.fm/TWIML"
+    - name: "Practical AI"
+      rss_url: "https://changelog.com/practicalai/feed"

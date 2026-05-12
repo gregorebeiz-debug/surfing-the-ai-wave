@@ -1,0 +1,12 @@
+{
+  "last_run": null,
+  "last_weekly_run": null,
+  "processed": {
+    "youtube_ids": [],
+    "reddit_ids": [],
+    "github_repos_seen": {},
+    "newsletter_ids": [],
+    "blog_ids": []
+  },
+  "stats": {}
+}
