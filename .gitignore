@@ -3,8 +3,10 @@ __pycache__/
 .env
 data/raw/
 data/analyzed/
+data/output/
 *.egg-info/
 dist/
 build/
 .venv/
 venv/
+.claude/
