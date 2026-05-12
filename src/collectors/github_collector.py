@@ -41,6 +41,9 @@ class GitHubCollector(BaseCollector):
             self.throttle()
 
         self.collected = results
+        for item in results:
+            safe_name = item["id"].replace("/", "_").replace(":", "_")[:80]
+            self.save_item(item, safe_name)
         print(f"[github] Collected {len(results)} items")
         return results
 
