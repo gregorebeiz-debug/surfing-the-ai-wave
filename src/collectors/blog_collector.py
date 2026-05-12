@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from urllib.parse import urljoin
 
 import feedparser
 import requests
@@ -121,7 +122,7 @@ class BlogCollector(BaseCollector):
                     link = a_tag.get("href", "") if a_tag else ""
 
                 if link and not link.startswith("http"):
-                    link = blog_url.rstrip("/") + "/" + link.lstrip("/")
+                    link = urljoin(blog_url, link)
 
                 # Get initial content from the listing page
                 content = article.get_text(separator=" ", strip=True)[:500]
