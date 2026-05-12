@@ -2,12 +2,61 @@
 from __future__ import annotations
 
 import os
+import re
 import smtplib
 import ssl
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
+
+
+def _strip_markdown(text: str) -> str:
+    """Convert markdown to clean plain text for email body."""
+    # Remove markdown links: [text](url) → text
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+    # Remove bold: **text** → text
+    text = re.sub(r"\*\*([^*]+)\*\*", r"\1", text)
+    # Remove italic: *text* → text
+    text = re.sub(r"\*([^*]+)\*", r"\1", text)
+    # Remove headers: ## Header → Header
+    text = re.sub(r"^#{1,6}\s+", "", text, flags=re.MULTILINE)
+    # Remove horizontal rules
+    text = re.sub(r"^---+\s*$", "─" * 40, text, flags=re.MULTILINE)
+    # Clean up bullet points
+    text = re.sub(r"^[•●]\s+", "  · ", text, flags=re.MULTILINE)
+    text = re.sub(r"^[-*]\s+", "  · ", text, flags=re.MULTILINE)
+    # Remove inline code backticks
+    text = re.sub(r"`([^`]+)`", r"\1", text)
+    return text.strip()
+
+
+def _extract_preview(newsletter_md: str) -> str:
+    """Extract a clean preview from the newsletter markdown."""
+    lines = newsletter_md.strip().split("\n")
+    preview_parts = []
+
+    # Get the editorial intro (first italic paragraph)
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("*") and stripped.endswith("*") and not stripped.startswith("**"):
+            preview_parts.append(_strip_markdown(stripped))
+            break
+
+    # Get The Wave Today first item headline
+    in_wave = False
+    for line in lines:
+        stripped = line.strip()
+        if "wave today" in stripped.lower() or "noticias que mueven" in stripped.lower():
+            in_wave = True
+            continue
+        if in_wave and stripped.startswith("###"):
+            preview_parts.append(_strip_markdown(stripped))
+            break
+        if in_wave and stripped.startswith("## ") and "wave" not in stripped.lower():
+            break
+
+    return "\n\n".join(preview_parts)
 
 
 def send_newsletter_email(
@@ -27,32 +76,27 @@ def send_newsletter_email(
         return False
     if not sender or not app_password:
         print("[email] Gmail credentials missing. Set GMAIL_ADDRESS and GMAIL_APP_PASSWORD env vars.")
-        print("[email] Get an App Password at: myaccount.google.com → Security → App passwords")
+        print("[email] Get an App Password at: myaccount.google.com > Security > App passwords")
         return False
 
-    subject = f"Surfing the AI Wave — {newsletter_type.capitalize()} Brief ({date_str})"
+    type_label = "Weekly" if newsletter_type == "weekly" else "Daily"
+    subject = f"Surfing the AI Wave \u2014 {type_label} Brief ({date_str})"
 
-    # Extract intro lines as plain-text body preview
-    lines = newsletter_md.strip().split("\n")
-    preview_lines = []
-    for line in lines[:20]:
-        if line.strip() and not line.startswith("#"):
-            preview_lines.append(line.strip())
-        if len(preview_lines) >= 5:
-            break
+    preview = _extract_preview(newsletter_md)
 
     body_text = (
-        f"Surfing the AI Wave — {newsletter_type.capitalize()} Brief\n"
+        f"Surfing the AI Wave \u2014 {type_label} Brief\n"
         f"{date_str}\n\n"
-        + "\n".join(preview_lines)
-        + "\n\n---\nFull briefing attached as PDF.\n"
+        f"{preview}\n\n"
+        f"{'─' * 40}\n"
+        f"Briefing completo en el PDF adjunto.\n"
     )
 
     msg = MIMEMultipart()
     msg["From"] = sender
     msg["To"] = recipient
     msg["Subject"] = subject
-    msg.attach(MIMEText(body_text, "plain"))
+    msg.attach(MIMEText(body_text, "plain", "utf-8"))
 
     pdf_file = Path(pdf_path)
     if pdf_file.exists():
