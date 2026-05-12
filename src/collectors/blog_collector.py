@@ -15,7 +15,7 @@ class BlogCollector(BaseCollector):
     source_type = "blogs"
     request_delay = 1.5
 
-    def collect(self, sources: list[dict], tier: str = "tier1") -> list[dict]:
+    def collect(self, sources: list[dict], tier: str = "tier1") -> list[dict]:  # noqa: ARG002
         results = []
 
         for source in sources:
@@ -123,6 +123,8 @@ class BlogCollector(BaseCollector):
 
                 if link and not link.startswith("http"):
                     link = urljoin(blog_url, link)
+                if not link or not link.startswith("http"):
+                    continue
 
                 # Get initial content from the listing page
                 content = article.get_text(separator=" ", strip=True)[:500]
