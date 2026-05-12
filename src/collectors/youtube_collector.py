@@ -19,10 +19,11 @@ class YouTubeCollector(BaseCollector):
         results = []
         for source in sources:
             handle = source.get("handle", "")
+            channel_id = source.get("channel_id")
             name = source.get("name", handle)
             print(f"[youtube] Checking {name} ({handle})...")
 
-            videos = self.retry(self._get_recent_videos, handle)
+            videos = self.retry(self._get_recent_videos, handle, channel_id)
             if not videos:
                 print(f"[youtube] No videos found for {name}")
                 continue
@@ -54,11 +55,11 @@ class YouTubeCollector(BaseCollector):
         print(f"[youtube] Collected {len(results)} new videos")
         return results
 
-    def _get_recent_videos(self, handle: str) -> list[dict]:
+    def _get_recent_videos(self, handle: str, channel_id: str | None = None) -> list[dict]:
         """Fetch recent videos from a channel via its RSS feed."""
-        # YouTube provides RSS feeds for channels via handle
-        # First resolve handle to channel ID via the channel page
-        channel_id = self._resolve_channel_id(handle)
+        # Use provided channel_id if available, otherwise resolve from handle
+        if not channel_id:
+            channel_id = self._resolve_channel_id(handle)
         if not channel_id:
             return []
 
