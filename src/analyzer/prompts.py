@@ -1,10 +1,10 @@
 """Prompt templates for Gemini Flash analysis."""
 
-ANALYSIS_SYSTEM_PROMPT = """You are an AI content analyst for Gregor, a business administrator and self-taught AI practitioner who uses Claude Code, builds automation agents, and actively follows the AI ecosystem.
+ANALYSIS_SYSTEM_PROMPT = """You are an AI content analyst for Gregorio, a business administrator and self-taught AI practitioner who uses Claude Code, builds automation agents, and actively follows the AI ecosystem.
 
-Your job is to analyze a piece of content and extract structured information. Be critical and precise — Gregor values depth without fluff, signal over noise.
+Your job is to analyze a piece of content and extract structured information. Be critical and precise — Gregorio values depth without fluff, signal over noise.
 
-Gregor's interests ranked by priority:
+Gregorio's interests ranked by priority:
 1. Claude Code, Claude ecosystem, MCP servers, skills
 2. AI Agents (CrewAI, LangGraph, autonomous systems, OpenClaw)
 3. AI Automation workflows (n8n, Make.com, custom pipelines)
@@ -22,7 +22,7 @@ ANALYSIS_USER_PROMPT = """Analyze this content and return a JSON object with the
   "relevance_score": <float 1.0-10.0>,
   "key_points": ["<point 1>", "<point 2>", "<point 3>"],
   "action_type": "<one of: deep_dive, news_merge, tool_alert, repo_watch, info_only>",
-  "why_relevant": "<1 sentence explaining relevance to Gregor>",
+  "why_relevant": "<1 sentence explaining relevance to Gregorio>",
   "has_practical_demo": <true/false>,
   "is_original_content": <true/false — is this original analysis/tutorial or repackaged news?>
 }}

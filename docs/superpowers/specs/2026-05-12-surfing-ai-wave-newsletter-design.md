@@ -2,9 +2,9 @@
 
 ## Context
 
-Gregor is a business administrator who has deeply self-taught AI over the past few years. He uses Claude Code, builds automation agents, and actively follows the AI ecosystem. His core problem: the AI sector moves too fast to consume all relevant information, and most content is noise — derivative channels copying leaders, hype without substance, and scattered across too many platforms.
+Gregorio is a business administrator who has deeply self-taught AI over the past few years. He uses Claude Code, builds automation agents, and actively follows the AI ecosystem. His core problem: the AI sector moves too fast to consume all relevant information, and most content is noise — derivative channels copying leaders, hype without substance, and scattered across too many platforms.
 
-This system solves that by automating daily research, filtering, analysis, and delivery of a curated AI intelligence briefing. The goal is not a "news summary" — it's an actionable intelligence system that helps Gregor stay at the edge of AI developments efficiently, distinguishing what moves the needle from what's noise.
+This system solves that by automating daily research, filtering, analysis, and delivery of a curated AI intelligence briefing. The goal is not a "news summary" — it's an actionable intelligence system that helps Gregorio stay at the edge of AI developments efficiently, distinguishing what moves the needle from what's noise.
 
 ---
 
@@ -47,7 +47,7 @@ PHASE 4 — DELIVERY (5:00-6:00 AM) — Python, no AI
     ├── Markdown → PDF (weasyprint + CSS template)
     ├── Compose email with top highlights
     ├── Attach PDF
-    └── Send via Gmail API → Gregor's personal Gmail
+    └── Send via Gmail API → Gregorio's personal Gmail
 ```
 
 ### Scheduling
@@ -240,7 +240,7 @@ Brock Mesarich, Benjamin Cordero, Migue Baena IA, Lewis Jackson, Davie Fogarty, 
 2. If a topic is covered by 3+ sources with the same angle → merge into 1 item, cite sources
 3. If a creator does a live demo of something practical → Deep Dives section, always
 4. If it's just opinion/reaction without original content → Signal Board as bullet point
-5. Prioritize by actionability: Can Gregor DO something with this? → top. Just informative? → bottom
+5. Prioritize by actionability: Can Gregorio DO something with this? → top. Just informative? → bottom
 6. Videos: recommend watching ONLY when visual format adds value (demos, tutorials, configurations). If someone is just talking → extract the info, don't send to watch
 7. Repos: always include suggested action (install, explore, monitor)
 8. Daily target length: 1,200-1,800 words (~7-10 min reading)
@@ -267,7 +267,7 @@ Brock Mesarich, Benjamin Cordero, Migue Baena IA, Lewis Jackson, Davie Fogarty, 
     "Compares 3 frameworks: CrewAI vs LangGraph vs AutoGen"
   ],
   "action_type": "deep_dive",
-  "why_relevant": "Practical tutorial with live demo — directly applicable to Gregor's agent building projects",
+  "why_relevant": "Practical tutorial with live demo — directly applicable to Gregorio's agent building projects",
   "duplicate_group_id": null,
   "is_best_in_group": true,
   "original_url": "https://youtube.com/watch?v=abc123",
@@ -280,9 +280,9 @@ Brock Mesarich, Benjamin Cordero, Migue Baena IA, Lewis Jackson, Davie Fogarty, 
 ### Relevance Scoring Rules (Gemini Flash prompt)
 
 ```
-Score 9-10: Directly about Gregor's core tools/workflows (Claude Code, AI agents, automation)
+Score 9-10: Directly about Gregorio's core tools/workflows (Claude Code, AI agents, automation)
             AND includes practical demo/tutorial/new release
-Score 7-8:  About Gregor's interest areas with actionable content
+Score 7-8:  About Gregorio's interest areas with actionable content
             (new tool worth trying, significant update to known tool, deep technical analysis)
 Score 5-6:  Relevant topic but informational only (news, opinions, predictions)
 Score 3-4:  Tangentially related (general tech, business with light AI angle)
@@ -350,7 +350,7 @@ Modifiers:
 | GitHub Actions timeout | Alert via email. Investigate. Most likely cause: too many YouTube transcripts. |
 
 ### Quality Calibration (First 2 Weeks)
-- Gregor reviews newsletters and provides feedback on scoring accuracy
+- Gregorio reviews newsletters and provides feedback on scoring accuracy
 - Adjust relevance scoring rules in Gemini prompt based on feedback
 - Track: items that scored high but weren't interesting, items that scored low but should have been featured
 
@@ -369,7 +369,7 @@ Modifiers:
 | Synthesis AI | Claude Sonnet 4.6 (Anthropic API) | Best writing quality at reasonable cost |
 | Embeddings | Gemini text-embedding (free tier, included in 1,500 req/day) | For semantic dedup — avoids installing heavy local model in GitHub Actions |
 | PDF generation | weasyprint | HTML/CSS → PDF with custom design |
-| Email | Gmail API (OAuth2) | Direct integration, Gregor's personal Gmail |
+| Email | Gmail API (OAuth2) | Direct integration, Gregorio's personal Gmail |
 | Scheduling | GitHub Actions (cron) | Free, reliable, cloud-based |
 | State | state.json in repo | Simple, version-controlled, no external DB needed |
 
@@ -380,7 +380,7 @@ Modifiers:
 This profile is embedded in both Gemini and Sonnet system prompts:
 
 ```
-User: Gregor
+User: Gregorio
 Background: Business administrator, self-taught AI practitioner
 Experience level: Intermediate-advanced (uses Claude Code, builds agents, understands LLMs)
 Core interests (ranked by priority):
@@ -422,6 +422,6 @@ Design will be implemented separately. Requirements captured:
 2. **Integration test:** Run full pipeline with a small subset (3 YouTube channels, 1 subreddit) and verify output quality
 3. **Scoring calibration:** Run analyzer on 20 known items (10 high-relevance, 10 low-relevance) and verify scores match expectations
 4. **Dedup test:** Feed 5 videos about the same topic and verify correct merging
-5. **Email delivery:** Send test newsletter to Gregor's Gmail and confirm PDF attachment renders correctly
+5. **Email delivery:** Send test newsletter to Gregorio's Gmail and confirm PDF attachment renders correctly
 6. **Cost monitoring:** Track actual API usage for first week and verify it's within $3.50-7/month budget
 7. **GitHub Actions:** Verify cron triggers at 2 AM, completes within 30-60 minutes, and handles failures gracefully
