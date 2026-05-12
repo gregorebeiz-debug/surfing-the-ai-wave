@@ -12,11 +12,10 @@ Run the collection pipeline, read the raw data, analyze and score each item, the
 
 ## STEP 1: Collect Raw Data
 
-Run these shell commands:
+Run these shell commands (the repo root is your working directory):
 
 ```bash
-cd /path/to/surfing-the-ai-wave
-pip install -r requirements.txt
+pip install -r requirements.txt --quiet
 python -m src.collect --tier tier1
 ```
 
