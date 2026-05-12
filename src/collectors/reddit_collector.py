@@ -1,49 +1,36 @@
-"""Collects top posts from configured subreddits."""
+"""Collects top posts from configured subreddits via public RSS (no API key needed)."""
 from __future__ import annotations
 
-import os
+import xml.etree.ElementTree as ET
+from urllib.parse import urlparse
 
-import praw
+import requests
 
 from .base import BaseCollector
 
 
 class RedditCollector(BaseCollector):
     source_type = "reddit"
-    request_delay = 1.0
+    request_delay = 1.5
 
-    def __init__(self, state: dict | None = None):
-        super().__init__(state)
-        self.reddit = None
-
-    def _init_reddit(self) -> bool:
-        if self.reddit is not None:
-            return True
-        client_id = os.getenv("REDDIT_CLIENT_ID", "")
-        client_secret = os.getenv("REDDIT_CLIENT_SECRET", "")
-        if not client_id or not client_secret:
-            print("[reddit] SKIPPED — REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET not set")
-            print("[reddit] Create a Reddit app at https://reddit.com/prefs/apps (free)")
-            return False
-        self.reddit = praw.Reddit(
-            client_id=client_id,
-            client_secret=client_secret,
-            user_agent="SurfingTheAIWave/1.0",
-        )
-        return True
+    # RSS namespaces used by Reddit
+    NS = {
+        "atom": "http://www.w3.org/2005/Atom",
+        "media": "http://search.yahoo.com/mrss/",
+    }
 
     def collect(self, sources: list[dict], tier: str = "tier1") -> list[dict]:
-        if not self._init_reddit():
-            self.collected = []
-            return []
         results = []
 
         for source in sources:
-            sub_name = source["subreddit"]
-            print(f"[reddit] Checking r/{sub_name}...")
+            sub_name = source.get("subreddit", "")
+            if not sub_name:
+                continue
+            print(f"[reddit] Checking r/{sub_name} via RSS...")
 
-            posts = self.retry(self._get_top_posts, sub_name)
+            posts = self.retry(self._get_rss_posts, sub_name)
             if not posts:
+                print(f"[reddit] No posts from r/{sub_name}")
                 continue
 
             for post in posts:
@@ -59,38 +46,78 @@ class RedditCollector(BaseCollector):
         print(f"[reddit] Collected {len(results)} posts")
         return results
 
-    def _get_top_posts(self, subreddit_name: str, limit: int = 15) -> list[dict]:
-        """Get top posts from last 24 hours."""
-        sub = self.reddit.subreddit(subreddit_name)
+    def _get_rss_posts(self, subreddit_name: str, limit: int = 25) -> list[dict]:
+        """Fetch top posts from subreddit public RSS feed."""
+        url = f"https://www.reddit.com/r/{subreddit_name}/hot.rss?limit={limit}"
+        headers = {"User-Agent": "SurfingTheAIWave/1.0 (newsletter bot)"}
+
+        resp = requests.get(url, headers=headers, timeout=15)
+        resp.raise_for_status()
+
+        root = ET.fromstring(resp.content)
         posts = []
 
-        for post in sub.hot(limit=limit):
-            if post.stickied:
+        # Reddit RSS is Atom format
+        for entry in root.findall("atom:entry", self.NS):
+            title_el = entry.find("atom:title", self.NS)
+            link_el = entry.find("atom:link", self.NS)
+            content_el = entry.find("atom:content", self.NS)
+            id_el = entry.find("atom:id", self.NS)
+            updated_el = entry.find("atom:updated", self.NS)
+            author_el = entry.find("atom:author/atom:name", self.NS)
+
+            if title_el is None or link_el is None:
                 continue
 
-            # Get top comments for context
-            post.comment_sort = "best"
-            post.comments.replace_more(limit=0)
-            top_comments = []
-            for comment in post.comments[:5]:
-                top_comments.append({
-                    "body": comment.body[:500],
-                    "score": comment.score,
-                })
+            title = (title_el.text or "").strip()
+            post_url = link_el.get("href", "")
+            raw_content = (content_el.text or "") if content_el is not None else ""
+            post_id_full = (id_el.text or "").strip()
+            published_date = (updated_el.text or "") if updated_el is not None else ""
+            author = (author_el.text or "") if author_el is not None else ""
+
+            # Derive short ID from the Atom id (e.g. t3_abc123)
+            short_id = post_id_full.split("_")[-1] if "_" in post_id_full else post_id_full[-8:]
+
+            # Strip HTML from content to get plain text body
+            body = self._strip_html(raw_content)[:3000]
+
+            # Extract any external link from content (link posts have it)
+            external_link = self._extract_external_link(raw_content)
 
             posts.append({
-                "id": f"reddit_{subreddit_name}_{post.id}",
+                "id": f"reddit_{subreddit_name}_{short_id}",
                 "source_type": "reddit",
                 "source_channel": f"r/{subreddit_name}",
                 "source_tier": 1,
-                "title": post.title,
-                "body": (post.selftext or "")[:3000],
-                "score": post.score,
-                "num_comments": post.num_comments,
-                "original_url": f"https://reddit.com{post.permalink}",
-                "published_date": str(post.created_utc),
-                "top_comments": top_comments,
-                "link_url": post.url if not post.is_self else None,
+                "title": title,
+                "body": body,
+                "score": None,   # RSS doesn't expose score
+                "num_comments": None,
+                "original_url": post_url,
+                "published_date": published_date,
+                "author": author,
+                "link_url": external_link,
             })
 
-        return posts
+        return posts[:15]  # Cap at 15 per subreddit
+
+    def _strip_html(self, html: str) -> str:
+        """Remove HTML tags and decode entities to plain text."""
+        import html as html_lib
+        import re
+        text = re.sub(r"<[^>]+>", " ", html)
+        text = html_lib.unescape(text)
+        text = re.sub(r"\s+", " ", text).strip()
+        return text
+
+    def _extract_external_link(self, content_html: str) -> str | None:
+        """Try to find an external link in the post content (link posts)."""
+        import re
+        # Look for href in content that isn't reddit.com itself
+        hrefs = re.findall(r'href="([^"]+)"', content_html)
+        for href in hrefs:
+            parsed = urlparse(href)
+            if parsed.netloc and "reddit.com" not in parsed.netloc:
+                return href
+        return None

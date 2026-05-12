@@ -1,15 +1,13 @@
-"""Sends newsletter email with PDF attachment via Gmail API."""
+"""Sends newsletter email with PDF attachment via Gmail SMTP + App Password."""
 from __future__ import annotations
 
-import base64
 import os
+import smtplib
+import ssl
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
-
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
 
 
 def send_newsletter_email(
@@ -19,24 +17,22 @@ def send_newsletter_email(
     date_str: str = "",
     newsletter_type: str = "daily",
 ) -> bool:
-    """Send newsletter email with PDF attachment via Gmail API."""
+    """Send newsletter email with PDF attachment via Gmail SMTP."""
     recipient = recipient or os.getenv("NEWSLETTER_RECIPIENT", "")
+    sender = os.getenv("GMAIL_ADDRESS", "")
+    app_password = os.getenv("GMAIL_APP_PASSWORD", "")
+
     if not recipient:
         print("[email] No recipient configured. Set NEWSLETTER_RECIPIENT env var.")
         return False
-
-    # Build Gmail service
-    creds = _get_credentials()
-    if not creds:
-        print("[email] No Gmail credentials found.")
+    if not sender or not app_password:
+        print("[email] Gmail credentials missing. Set GMAIL_ADDRESS and GMAIL_APP_PASSWORD env vars.")
+        print("[email] Get an App Password at: myaccount.google.com → Security → App passwords")
         return False
 
-    service = build("gmail", "v1", credentials=creds)
+    subject = f"Surfing the AI Wave — {newsletter_type.capitalize()} Brief ({date_str})"
 
-    # Compose email
-    subject = f"🏄 Surfing the AI Wave — {newsletter_type.capitalize()} Brief ({date_str})"
-
-    # Extract first few lines as email preview
+    # Extract intro lines as plain-text body preview
     lines = newsletter_md.strip().split("\n")
     preview_lines = []
     for line in lines[:20]:
@@ -44,23 +40,20 @@ def send_newsletter_email(
             preview_lines.append(line.strip())
         if len(preview_lines) >= 5:
             break
-    preview = "\n".join(preview_lines)
 
-    body_text = f"""Surfing the AI Wave — {newsletter_type.capitalize()} Brief
-{date_str}
-
-{preview}
-
----
-Full briefing attached as PDF.
-"""
+    body_text = (
+        f"Surfing the AI Wave — {newsletter_type.capitalize()} Brief\n"
+        f"{date_str}\n\n"
+        + "\n".join(preview_lines)
+        + "\n\n---\nFull briefing attached as PDF.\n"
+    )
 
     msg = MIMEMultipart()
+    msg["From"] = sender
     msg["To"] = recipient
     msg["Subject"] = subject
     msg.attach(MIMEText(body_text, "plain"))
 
-    # Attach PDF
     pdf_file = Path(pdf_path)
     if pdf_file.exists():
         with open(pdf_file, "rb") as f:
@@ -71,58 +64,19 @@ Full briefing attached as PDF.
             )
             msg.attach(attachment)
     else:
-        print(f"[email] PDF not found at {pdf_path}")
+        print(f"[email] PDF not found at {pdf_path}, sending without attachment.")
 
-    # Send
-    raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
     try:
-        service.users().messages().send(
-            userId="me",
-            body={"raw": raw},
-        ).execute()
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+            server.login(sender, app_password)
+            server.sendmail(sender, recipient, msg.as_string())
         print(f"[email] Newsletter sent to {recipient}")
         return True
+    except smtplib.SMTPAuthenticationError:
+        print("[email] Authentication failed. Check GMAIL_ADDRESS and GMAIL_APP_PASSWORD.")
+        print("[email] Make sure you're using an App Password, not your regular Gmail password.")
+        return False
     except Exception as e:
         print(f"[email] Failed to send: {e}")
         return False
-
-
-def _get_credentials() -> Credentials | None:
-    """Load Gmail OAuth2 credentials from environment or token file."""
-    token_path = os.getenv("GMAIL_TOKEN_PATH", "config/gmail_token.json")
-
-    if Path(token_path).exists():
-        creds = Credentials.from_authorized_user_file(
-            token_path,
-            scopes=["https://www.googleapis.com/auth/gmail.send"],
-        )
-        if creds and creds.valid:
-            return creds
-        if creds and creds.expired and creds.refresh_token:
-            from google.auth.transport.requests import Request
-            creds.refresh(Request())
-            # Save refreshed token
-            Path(token_path).write_text(creds.to_json())
-            return creds
-
-    # Try environment variables
-    access_token = os.getenv("GMAIL_ACCESS_TOKEN")
-    refresh_token = os.getenv("GMAIL_REFRESH_TOKEN")
-    client_id = os.getenv("GMAIL_CLIENT_ID")
-    client_secret = os.getenv("GMAIL_CLIENT_SECRET")
-
-    if all([refresh_token, client_id, client_secret]):
-        creds = Credentials(
-            token=access_token,
-            refresh_token=refresh_token,
-            token_uri="https://oauth2.googleapis.com/token",
-            client_id=client_id,
-            client_secret=client_secret,
-            scopes=["https://www.googleapis.com/auth/gmail.send"],
-        )
-        if creds.expired:
-            from google.auth.transport.requests import Request
-            creds.refresh(Request())
-        return creds
-
-    return None
