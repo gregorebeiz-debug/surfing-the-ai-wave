@@ -17,7 +17,7 @@ Business administrator and self-taught AI practitioner. Uses Claude Code daily, 
 9. Agentic OS, memory systems, RAG architectures
 
 ## Your Mission
-Run the collection pipeline, read the raw data, analyze and score each item, then write a polished newsletter and deliver it via email. **Every decision must serve Gregorio's specific interests and workflow.**
+Collect data, analyze and score each item, write a polished newsletter, and deliver it as a styled HTML email. **Every decision must serve Gregorio's specific interests and workflow.**
 
 ---
 
@@ -32,6 +32,12 @@ python -m src.collect --tier tier1
 
 For Sunday (weekly edition), use `--tier all` instead.
 Raw JSON files will be saved to `data/raw/YYYY-MM-DD/`.
+
+**IMPORTANT — Handling network failures:**
+This environment may block outbound HTTP to some sites (YouTube, Reddit, blogs). This is normal.
+- If most collectors return 403 errors, **work with whatever data you collected** (GitHub usually works).
+- **Supplement with web search:** After collection, search the web for "AI news today", "Claude Code updates", "Anthropic news", "OpenAI news" to find additional stories.
+- A newsletter with 5-10 high-quality items is better than no newsletter.
 
 ## STEP 2: Read Collected Data
 
@@ -187,25 +193,89 @@ python -m src.deliver data/output/YYYY-MM-DD/newsletter.md
 
 Replace YYYY-MM-DD with today's actual date.
 
-## STEP 6: Send Email
+## STEP 6: Send Email via Gmail
 
-Run this command (replace YYYY-MM-DD with today's date):
+Use `mcp__Gmail__create_draft` to create a styled email draft and then tell Gregorio the draft is ready.
 
-```bash
-GMAIL_ADDRESS="gregorebeiz@gmail.com" GMAIL_APP_PASSWORD="PASTE_APP_PASSWORD_HERE" NEWSLETTER_RECIPIENT="gregorebeiz@gmail.com" python -c "from src.delivery.email_sender import send_newsletter_email; send_newsletter_email(open('data/output/YYYY-MM-DD/newsletter.md').read(), 'data/output/YYYY-MM-DD/newsletter.pdf', date_str='YYYY-MM-DD')"
+**Parameters:**
+- **to:** `["gregorebeiz@gmail.com"]`
+- **subject:** `Surfing the AI Wave — Daily Brief (YYYY-MM-DD)`
+- **body:** Plain text version of the newsletter (strip all markdown formatting)
+- **htmlBody:** The full newsletter converted to styled HTML (see template below)
+
+### HTML Email Template
+
+Convert the newsletter markdown to HTML using this structure. Use INLINE styles (email clients strip `<style>` tags).
+
+```html
+<div style="max-width:640px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;color:#1e293b;line-height:1.6">
+  <!-- Top wave bar -->
+  <div style="height:6px;background:linear-gradient(90deg,#1e40af,#3b82f6);border-radius:3px 3px 0 0"></div>
+  <div style="height:3px;background:#d4956a"></div>
+
+  <!-- Header -->
+  <div style="padding:24px 20px 12px">
+    <h1 style="margin:0;font-size:24px;color:#0f2b46">Surfing the AI Wave</h1>
+    <p style="margin:4px 0 0;font-size:13px;color:#64748b">DATE_LINE</p>
+  </div>
+
+  <!-- Editorial intro -->
+  <div style="margin:0 20px 20px;padding:14px 16px;background:#fdf8f4;border-left:3px solid #d4956a;border-radius:0 4px 4px 0">
+    <p style="margin:0;font-size:14px;color:#475569;font-style:italic">EDITORIAL_INTRO</p>
+  </div>
+
+  <!-- For each H2 section, use this: -->
+  <div style="margin:20px 20px 12px;padding:10px 14px;background:SECTION_COLOR;border-radius:4px">
+    <h2 style="margin:0;font-size:15px;color:#ffffff">SECTION_TITLE</h2>
+  </div>
+
+  <!-- Section colors: -->
+  <!-- The Wave Today: background:#0f2b46 -->
+  <!-- Deep Dives: background:#92400e -->
+  <!-- Tool & Repo Watch: background:#166534 -->
+  <!-- Community Pulse: background:#581c87 -->
+  <!-- Signal Board: background:#334155 -->
+  <!-- Buyer Beware: background:#dc2626 -->
+
+  <!-- For each H3 item inside a section: -->
+  <div style="margin:8px 20px;padding:10px 14px;background:CARD_BG;border-left:3px solid CARD_BORDER;border-radius:0 4px 4px 0">
+    <h3 style="margin:0 0 6px;font-size:14px;color:#0f2b46">ITEM_TITLE</h3>
+    <p style="margin:0;font-size:13px;color:#1e293b">ITEM_CONTENT</p>
+  </div>
+
+  <!-- Card backgrounds per section: -->
+  <!-- The Wave Today: bg:#f0f6ff border:#3b82f6 -->
+  <!-- Deep Dives: bg:#fefce8 border:#d4956a -->
+  <!-- Tool & Repo Watch: bg:#f0fdf4 border:#22c55e -->
+  <!-- Community Pulse: bg:#faf5ff border:#a855f7 -->
+  <!-- Buyer Beware: bg:#fef2f2 border:#ef4444 -->
+
+  <!-- Signal Board bullets: -->
+  <div style="margin:4px 20px;padding:4px 0;font-size:12px;color:#1e293b">
+    <span style="color:#3b82f6">&#x25CF;</span> BULLET_TEXT
+  </div>
+
+  <!-- Links: -->
+  <a href="URL" style="color:#2563eb;text-decoration:underline">LINK_TEXT</a>
+
+  <!-- Footer -->
+  <div style="margin:20px 20px 0;padding:12px 0;border-top:1px solid #e2e8f0;text-align:center;font-size:11px;color:#94a3b8">
+    <em>FOOTER_STATS</em>
+  </div>
+
+  <!-- Bottom wave bar -->
+  <div style="height:3px;background:#d4956a;margin-top:16px"></div>
+  <div style="height:6px;background:linear-gradient(90deg,#1e40af,#3b82f6);border-radius:0 0 3px 3px"></div>
+  <p style="text-align:center;font-size:11px;color:#94a3b8;margin:8px 0">Surfing the AI Wave <span style="color:#d4956a">|</span> Intelligence briefing for Gregorio</p>
+</div>
 ```
 
-**Important:** Replace `PASTE_APP_PASSWORD_HERE` with the value of `GMAIL_APP_PASSWORD` from your instructions.
-
-If SMTP fails, fall back to Gmail MCP to create a draft:
-- Use `mcp__Gmail__create_draft`
-- **To:** gregorebeiz@gmail.com
-- **Subject:** `Surfing the AI Wave — Daily Brief (YYYY-MM-DD)`
-- **Body:** Full newsletter content converted to HTML
+**IMPORTANT:** Build the actual HTML by replacing placeholders with real content. Make ALL links clickable `<a href>` tags. Convert markdown bold to `<strong>`, italic to `<em>`.
 
 ## STEP 7: Archive
 
 Save the newsletter markdown to `newsletters/YYYY/MM/YYYY-MM-DD.md` for archival.
+Do NOT attempt to push to git — just save the file locally.
 
 ---
 
@@ -215,5 +285,5 @@ Save the newsletter markdown to `newsletters/YYYY/MM/YYYY-MM-DD.md` for archival
 
 ## Environment Variables Needed
 - `GITHUB_TOKEN` — For GitHub collector (optional but recommended)
-- `GMAIL_APP_PASSWORD` — Provided in the Routine Instructions field
-- Note: Reddit and YouTube use public RSS feeds — no credentials needed
+- `GMAIL_APP_PASSWORD` — Provided in the Routine Instructions field (for SMTP fallback)
+- Note: Reddit and YouTube use public RSS feeds — no credentials needed but may be blocked from cloud environments
