@@ -1,9 +1,7 @@
 """Collects latest entries from AI newsletter RSS feeds."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
-import feedparser
+import xml.etree.ElementTree as ET
 import requests
 from bs4 import BeautifulSoup
 
@@ -39,31 +37,52 @@ class NewsletterCollector(BaseCollector):
         return results
 
     def _parse_feed(self, rss_url: str, source_name: str) -> list[dict]:
-        """Parse RSS feed and return recent entries."""
-        feed = feedparser.parse(rss_url)
-
-        if feed.bozo and not feed.entries:
-            print(f"[newsletters] Feed error for {source_name}: {feed.bozo_exception}")
+        """Parse RSS/Atom feed and return recent entries using xml.etree.ElementTree."""
+        try:
+            resp = requests.get(rss_url, timeout=15, headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+            })
+            resp.raise_for_status()
+            root = ET.fromstring(resp.content)
+        except Exception as e:
+            print(f"[newsletters] Feed error for {source_name}: {e}")
             return []
 
+        ns_atom = "http://www.w3.org/2005/Atom"
+        is_atom = root.tag == f"{{{ns_atom}}}feed" or "feed" in root.tag.lower()
+
         entries = []
-        for entry in feed.entries[:5]:  # last 5 entries
-            entry_id = f"nl_{source_name.lower().replace(' ', '_')}_{entry.get('id', entry.get('link', ''))}"
+        if is_atom:
+            items = root.findall(f"{{{ns_atom}}}entry")
+        else:
+            channel = root.find("channel")
+            items = channel.findall("item") if channel is not None else root.findall(".//item")
 
-            published = ""
-            if hasattr(entry, "published_parsed") and entry.published_parsed:
-                published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc).isoformat()
+        for item in items[:5]:
+            if is_atom:
+                title_el = item.find(f"{{{ns_atom}}}title")
+                link_el = item.find(f"{{{ns_atom}}}link")
+                link = link_el.get("href", "") if link_el is not None else ""
+                pub_el = item.find(f"{{{ns_atom}}}published") or item.find(f"{{{ns_atom}}}updated")
+                id_el = item.find(f"{{{ns_atom}}}id")
+                summary_el = item.find(f"{{{ns_atom}}}summary") or item.find(f"{{{ns_atom}}}content")
+            else:
+                title_el = item.find("title")
+                link_el = item.find("link")
+                link = (link_el.text or "").strip() if link_el is not None else ""
+                pub_el = item.find("pubDate")
+                id_el = item.find("guid")
+                summary_el = item.find("description")
 
-            # Get content — try content first, then summary, then scrape page
+            title = (title_el.text or "").strip() if title_el is not None else ""
+            published = (pub_el.text or "").strip() if pub_el is not None else ""
+            item_id = (id_el.text or link or "").strip() if id_el is not None else link
+            entry_id = f"nl_{source_name.lower().replace(' ', '_')}_{item_id}"
+
             content = ""
-            if hasattr(entry, "content") and entry.content:
-                raw = entry.content[0].get("value", "")
-                content = self._html_to_text(raw)[:5000]
-            elif hasattr(entry, "summary") and entry.summary:
-                content = self._html_to_text(entry.summary)[:5000]
+            if summary_el is not None and summary_el.text:
+                content = self._html_to_text(summary_el.text)[:5000]
 
-            # If content is too short, scrape the page directly
-            link = entry.get("link", "")
             if len(content) < 100 and link:
                 scraped = self._scrape_page(link, source_name)
                 if scraped and len(scraped) > len(content):
@@ -74,7 +93,7 @@ class NewsletterCollector(BaseCollector):
                 "source_type": "newsletter",
                 "source_channel": source_name,
                 "source_tier": 1,
-                "title": entry.get("title", ""),
+                "title": title,
                 "content": content,
                 "original_url": link,
                 "published_date": published,

@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from urllib.parse import urljoin
 
-import feedparser
+import xml.etree.ElementTree as ET
 import requests
 from bs4 import BeautifulSoup
 
@@ -47,36 +47,54 @@ class BlogCollector(BaseCollector):
         return results
 
     def _parse_rss(self, rss_url: str, source_name: str) -> list[dict]:
-        """Parse RSS/Atom feed for blog posts."""
-        feed = feedparser.parse(rss_url)
-
-        if feed.bozo and not feed.entries:
-            print(f"[blogs] Feed error for {source_name}: {feed.bozo_exception}")
+        """Parse RSS/Atom feed for blog posts using xml.etree.ElementTree."""
+        try:
+            resp = requests.get(rss_url, timeout=15, headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+            })
+            resp.raise_for_status()
+            root = ET.fromstring(resp.content)
+        except Exception as e:
+            print(f"[blogs] Feed error for {source_name}: {e}")
             return []
 
-        entries = []
-        for entry in feed.entries[:5]:
-            entry_id = f"blog_{source_name.lower().replace(' ', '_')}_{entry.get('id', entry.get('link', ''))}"
+        # Detect format: RSS 2.0 vs Atom
+        ns_atom = "http://www.w3.org/2005/Atom"
+        is_atom = root.tag == f"{{{ns_atom}}}feed" or "feed" in root.tag.lower()
 
-            published = ""
-            if hasattr(entry, "published_parsed") and entry.published_parsed:
-                published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc).isoformat()
-            elif hasattr(entry, "updated_parsed") and entry.updated_parsed:
-                published = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc).isoformat()
+        entries = []
+        if is_atom:
+            items = root.findall(f"{{{ns_atom}}}entry")
+        else:
+            channel = root.find("channel")
+            items = channel.findall("item") if channel is not None else root.findall(".//item")
+
+        for item in items[:5]:
+            if is_atom:
+                title_el = item.find(f"{{{ns_atom}}}title")
+                link_el = item.find(f"{{{ns_atom}}}link")
+                link = link_el.get("href", "") if link_el is not None else ""
+                pub_el = item.find(f"{{{ns_atom}}}published") or item.find(f"{{{ns_atom}}}updated")
+                id_el = item.find(f"{{{ns_atom}}}id")
+                summary_el = item.find(f"{{{ns_atom}}}summary") or item.find(f"{{{ns_atom}}}content")
+            else:
+                title_el = item.find("title")
+                link_el = item.find("link")
+                link = (link_el.text or "").strip() if link_el is not None else ""
+                pub_el = item.find("pubDate")
+                id_el = item.find("guid")
+                summary_el = item.find("description")
+
+            title = (title_el.text or "").strip() if title_el is not None else ""
+            published = (pub_el.text or "").strip() if pub_el is not None else ""
+            item_id = (id_el.text or link or "").strip() if id_el is not None else link
+            entry_id = f"blog_{source_name.lower().replace(' ', '_')}_{item_id}"
 
             content = ""
-            if hasattr(entry, "content") and entry.content:
-                content = entry.content[0].get("value", "")[:5000]
-            elif hasattr(entry, "summary"):
-                content = (entry.summary or "")[:5000]
-
-            # Strip HTML tags for cleaner content
-            if content:
-                soup = BeautifulSoup(content, "html.parser")
+            if summary_el is not None and summary_el.text:
+                soup = BeautifulSoup(summary_el.text, "html.parser")
                 content = soup.get_text(separator=" ", strip=True)[:5000]
 
-            # If content is too short, fetch the full article page
-            link = entry.get("link", "")
             if len(content) < 200 and link:
                 full_content = self._fetch_article(link, source_name)
                 if full_content and len(full_content) > len(content):
@@ -87,9 +105,9 @@ class BlogCollector(BaseCollector):
                 "source_type": "blog",
                 "source_channel": source_name,
                 "source_tier": 1,
-                "title": entry.get("title", ""),
+                "title": title,
                 "content": content,
-                "original_url": entry.get("link", ""),
+                "original_url": link,
                 "published_date": published,
             })
 
