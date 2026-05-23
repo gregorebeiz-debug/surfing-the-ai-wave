@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-05-22T11:11:20.297562+00:00",
+  "last_run": "2026-05-23T11:05:25.230112+00:00",
   "last_weekly_run": null,
   "processed": {
     "youtube_ids": [
@@ -300,7 +300,15 @@
       "gh_trending_deepfakes/faceswap",
       "gh_trending_vllm-project/vllm",
       "gh_trending_microsoft/ai-agents-for-beginners",
-      "gh_trending_ComposioHQ/awesome-claude-skills"
+      "gh_trending_ComposioHQ/awesome-claude-skills",
+      "gh_trending_hacksider/Deep-Live-Cam",
+      "gh_trending_yamadashy/repomix",
+      "gh_trending_onnx/onnx",
+      "gh_trending_dyad-sh/dyad",
+      "gh_trending_gradio-app/gradio",
+      "gh_trending_code-yeongyu/oh-my-openagent",
+      "gh_trending_mem0ai/mem0",
+      "gh_trending_crewAIInc/crewAI"
     ],
     "github_repos_seen": {
       "ollama/ollama": "v0.23.2",
