@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-05-23T11:05:25.230112+00:00",
+  "last_run": "2026-05-25T11:07:42.776440+00:00",
   "last_weekly_run": null,
   "processed": {
     "youtube_ids": [
@@ -308,7 +308,10 @@
       "gh_trending_gradio-app/gradio",
       "gh_trending_code-yeongyu/oh-my-openagent",
       "gh_trending_mem0ai/mem0",
-      "gh_trending_crewAIInc/crewAI"
+      "gh_trending_crewAIInc/crewAI",
+      "gh_trending_Kong/kong",
+      "gh_trending_unslothai/unsloth",
+      "gh_trending_nexu-io/open-design"
     ],
     "github_repos_seen": {
       "ollama/ollama": "v0.23.2",
