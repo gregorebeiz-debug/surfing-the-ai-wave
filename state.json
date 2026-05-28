@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-05-26T11:10:43.918721+00:00",
+  "last_run": "2026-05-28T11:15:05.322681+00:00",
   "last_weekly_run": null,
   "processed": {
     "youtube_ids": [
@@ -312,7 +312,8 @@
       "gh_trending_Kong/kong",
       "gh_trending_unslothai/unsloth",
       "gh_trending_nexu-io/open-design",
-      "gh_trending_OpenBB-finance/OpenBB"
+      "gh_trending_OpenBB-finance/OpenBB",
+      "gh_trending_ray-project/ray"
     ],
     "github_repos_seen": {
       "ollama/ollama": "v0.23.2",
