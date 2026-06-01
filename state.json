@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-05-30T11:12:35.429269+00:00",
+  "last_run": "2026-06-01T11:12:23.469433+00:00",
   "last_weekly_run": null,
   "processed": {
     "youtube_ids": [
@@ -316,7 +316,9 @@
       "gh_trending_ray-project/ray",
       "gh_trending_tesseract-ocr/tesseract",
       "gh_trending_thedaviddias/Front-End-Checklist",
-      "gh_trending_ruvnet/ruflo"
+      "gh_trending_ruvnet/ruflo",
+      "gh_trending_jingyaogong/minimind",
+      "gh_trending_ultralytics/yolov5"
     ],
     "github_repos_seen": {
       "ollama/ollama": "v0.23.2",
