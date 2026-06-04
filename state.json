@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-06-03T11:12:49.246805+00:00",
+  "last_run": "2026-06-04T11:13:11.200092+00:00",
   "last_weekly_run": null,
   "processed": {
     "youtube_ids": [
@@ -318,7 +318,9 @@
       "gh_trending_thedaviddias/Front-End-Checklist",
       "gh_trending_ruvnet/ruflo",
       "gh_trending_jingyaogong/minimind",
-      "gh_trending_ultralytics/yolov5"
+      "gh_trending_ultralytics/yolov5",
+      "gh_trending_usestrix/strix",
+      "gh_trending_shanraisshan/claude-code-best-practice"
     ],
     "github_repos_seen": {
       "ollama/ollama": "v0.23.2",
