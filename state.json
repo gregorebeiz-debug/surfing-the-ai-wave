@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-10-22T11:21:39.812199+00:00",
+  "last_run": "2026-10-23T11:30:26.825241+00:00",
   "last_weekly_run": null,
   "processed": {
     "youtube_ids": [
@@ -70,7 +70,12 @@
       "blog_openai_https://openai.com/index/what-parameter-golf-taught-us",
       "blog_openai_https://openai.com/index/autoscout24",
       "blog_anthropic_https://www.anthropic.com/news/announcements",
-      "blog_simon_willison_https://simonwillison.net/2026/May/12/mitchell-hashimoto/#atom-everything"
+      "blog_simon_willison_https://simonwillison.net/2026/May/12/mitchell-hashimoto/#atom-everything",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements"
     ],
     "github_ids": [
       "gh_trending_Significant-Gravitas/AutoGPT",
