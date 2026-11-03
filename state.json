@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-11-02T11:27:27.787941+00:00",
+  "last_run": "2026-11-03T11:19:36.218886+00:00",
   "last_weekly_run": null,
   "processed": {
     "youtube_ids": [
@@ -110,6 +110,11 @@
       "blog_anthropic_https://www.anthropic.com/news/announcements",
       "blog_anthropic_https://www.anthropic.com/news/announcements",
       "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/science",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
       "blog_anthropic_https://www.anthropic.com/science"
     ],
     "github_ids": [
@@ -149,7 +154,15 @@
       "gh_trending_stablyai/orca",
       "gh_trending_paperclipai/paperclip",
       "gh_trending_google-gemini/gemini-cli",
-      "gh_trending_infiniflow/ragflow"
+      "gh_trending_infiniflow/ragflow",
+      "gh_trending_usestrix/strix",
+      "gh_trending_yamadashy/repomix",
+      "gh_trending_ultralytics/ultralytics",
+      "gh_trending_roboflow/supervision",
+      "gh_trending_JuliaLang/julia",
+      "gh_trending_JuliusBrussee/caveman",
+      "gh_trending_deepseek-ai/deepseek-harness",
+      "gh_trending_Leonxlnx/taste-skill"
     ],
     "github_repos_seen": {
       "ollama/ollama": "v0.23.2",
