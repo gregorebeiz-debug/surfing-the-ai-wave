@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-11-04T11:19:05.070133+00:00",
+  "last_run": "2026-11-05T11:21:47.089466+00:00",
   "last_weekly_run": null,
   "processed": {
     "youtube_ids": [
@@ -120,6 +120,11 @@
       "blog_anthropic_https://www.anthropic.com/news/announcements",
       "blog_anthropic_https://www.anthropic.com/news/announcements",
       "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/science",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
       "blog_anthropic_https://www.anthropic.com/science"
     ],
     "github_ids": [
@@ -172,7 +177,11 @@
       "gh_trending_microsoft/AI-For-Beginners",
       "gh_trending_keras-team/keras",
       "gh_trending_harry0703/MoneyPrinterTurbo",
-      "gh_trending_unclecode/crawl4ai"
+      "gh_trending_unclecode/crawl4ai",
+      "gh_trending_rasbt/LLMs-from-scratch",
+      "gh_trending_rasbt/LLMs-from-scratch",
+      "gh_trending_microsoft/ML-For-Beginners",
+      "gh_trending_tt-a1i/archify"
     ],
     "github_repos_seen": {
       "ollama/ollama": "v0.23.2",
