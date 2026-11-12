@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-11-10T11:20:56.007338+00:00",
+  "last_run": "2026-11-12T11:20:12.907012+00:00",
   "last_weekly_run": null,
   "processed": {
     "youtube_ids": [
@@ -135,6 +135,11 @@
       "blog_anthropic_https://www.anthropic.com/news/announcements",
       "blog_anthropic_https://www.anthropic.com/news/announcements",
       "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/science",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
+      "blog_anthropic_https://www.anthropic.com/news/announcements",
       "blog_anthropic_https://www.anthropic.com/science"
     ],
     "github_ids": [
@@ -193,7 +198,8 @@
       "gh_trending_microsoft/ML-For-Beginners",
       "gh_trending_tt-a1i/archify",
       "gh_trending_paperless-ngx/paperless-ngx",
-      "gh_trending_cheaper-inference/OmniRoute"
+      "gh_trending_cheaper-inference/OmniRoute",
+      "gh_trending_huggingface/datasets"
     ],
     "github_repos_seen": {
       "ollama/ollama": "v0.23.2",
